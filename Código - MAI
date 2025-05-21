@@ -1,0 +1,1008 @@
+#ifndef power2_h
+#define power2_h
+#if defined(__AVR_HAVE_PRR0_PRSPI0)
+#define power_spi0_enable()      (PRR0 &= (uint8_t)~(1 << PRSPI0))
+#define power_spi0_disable()     (PRR0 |= (uint8_t)(1 << PRSPI0))
+#endif
+#if defined(__AVR_HAVE_PRR1_PRSPI1)
+#define power_spi1_enable()      (PRR1 &= (uint8_t)~(1 << PRSPI1))
+#define power_spi1_disable()     (PRR1 |= (uint8_t)(1 << PRSPI1))
+#endif
+#if defined(__AVR_HAVE_PRR0_PRTWI0)
+#define power_twi0_enable()      (PRR0 &= (uint8_t)~(1 << PRTWI0))
+#define power_twi0_disable()     (PRR0 |= (uint8_t)(1 << PRTWI0))
+#endif
+#if defined(__AVR_HAVE_PRR1_PRTWI1)
+#define power_twi1_enable()      (PRR1 &= (uint8_t)~(1 << PRTWI1))
+#define power_twi1_disable()     (PRR1 |= (uint8_t)(1 << PRTWI1))
+#endif
+#if defined(__AVR_HAVE_PRR1_PRPTC)
+#define power_ptc_enable()      (PRR1 &= (uint8_t)~(1 << PRPTC))
+#define power_ptc_disable()     (PRR1 |= (uint8_t)(1 << PRPTC))
+#endif
+#endif
+#ifndef LowPower_h
+#define LowPower_h
+//#include "Arduino.h"
+enum period_t
+{
+	SLEEP_15MS,
+	SLEEP_30MS,
+	SLEEP_60MS,
+	SLEEP_120MS,
+	SLEEP_250MS,
+	SLEEP_500MS,
+	SLEEP_1S,
+	SLEEP_2S,
+	SLEEP_4S,
+	SLEEP_8S,
+	SLEEP_FOREVER
+};
+
+enum bod_t
+{
+	BOD_OFF,
+	BOD_ON
+};
+
+enum adc_t
+{
+	ADC_OFF,
+	ADC_ON
+};
+
+enum timer5_t
+{
+	TIMER5_OFF,
+	TIMER5_ON
+};
+
+enum timer4_t
+{
+	TIMER4_OFF,
+	TIMER4_ON
+};
+
+enum timer3_t
+{
+	TIMER3_OFF,
+	TIMER3_ON
+};
+
+enum timer2_t
+{
+	TIMER2_OFF,
+	TIMER2_ON
+};
+
+enum timer1_t
+{
+	TIMER1_OFF,
+	TIMER1_ON
+};
+
+enum timer0_t
+{
+	TIMER0_OFF,
+	TIMER0_ON
+};
+
+
+
+#if defined __AVR_ATmega328PB__
+enum spi1_t
+{
+	SPI1_OFF,
+	SPI1_ON
+};
+
+enum spi0_t
+{
+	SPI0_OFF,
+	SPI0_ON
+};
+#else
+enum spi_t
+{
+	SPI_OFF,
+	SPI_ON
+};
+#endif
+
+enum usart0_t
+{
+	USART0_OFF,
+	USART0_ON
+};
+
+enum usart1_t
+{
+	USART1_OFF,
+	USART1_ON
+};
+
+enum usart2_t
+{
+	USART2_OFF,
+	USART2_ON
+};
+
+enum usart3_t
+{
+	USART3_OFF,
+	USART3_ON
+};
+
+
+#if defined __AVR_ATmega328PB__
+enum twi1_t
+{
+	TWI1_OFF,
+	TWI1_ON
+};
+
+enum twi0_t
+{
+	TWI0_OFF,
+	TWI0_ON
+};
+
+enum ptc_t
+{
+	PTC_OFF,
+	PTC_ON
+};
+
+#else
+enum twi_t
+{
+	TWI_OFF,
+	TWI_ON
+};
+#endif
+
+enum usb_t
+{
+	USB_OFF,
+	USB_ON
+};
+
+enum idle_t
+{
+	IDLE_0,
+	IDLE_1,
+	IDLE_2
+};
+class LowPowerClass
+{
+	public:
+		#if defined (__AVR__)
+
+			#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168__) || defined (__AVR_ATmega168P__) || defined (__AVR_ATmega88__)
+				void	idle(period_t period, adc_t adc, timer2_t timer2,
+						     timer1_t timer1, timer0_t timer0, spi_t spi,
+					         usart0_t usart0, twi_t twi);
+			#elif defined __AVR_ATmega328PB__
+				void	idle(period_t period, adc_t adc, 
+							 timer4_t timer4, timer3_t timer3, timer2_t timer2,
+							 timer1_t timer1, timer0_t timer0, 
+							 spi1_t spi1, spi0_t spi0,
+							 usart1_t usart1, usart0_t usart0, 
+							 twi1_t twi1, twi0_t twi0,
+							 ptc_t ptc);
+			#elif defined __AVR_ATmega644P__ || defined (__AVR_ATmega1284P__)
+				void	idle(period_t period, adc_t adc, timer2_t timer2,
+							 timer1_t timer1, timer0_t timer0, spi_t spi,
+							 usart1_t usart1, usart0_t usart0, twi_t twi);
+			#elif defined __AVR_ATmega2560__
+				void	idle(period_t period, adc_t adc, timer5_t timer5,
+							 timer4_t timer4, timer3_t timer3, timer2_t timer2,
+							 timer1_t timer1, timer0_t timer0, spi_t spi,
+							 usart3_t usart3, usart2_t usart2, usart1_t usart1,
+							 usart0_t usart0, twi_t twi);
+			#elif defined __AVR_ATmega256RFR2__
+				void	idle(period_t period, adc_t adc, timer5_t timer5,
+									 timer4_t timer4, timer3_t timer3, timer2_t timer2,
+				   				 timer1_t timer1, timer0_t timer0, spi_t spi,
+						       usart1_t usart1,
+									 usart0_t usart0, twi_t twi);
+			#elif defined __AVR_ATmega32U4__
+				void	idle(period_t period, adc_t adc, timer4_t timer4,
+				             timer3_t timer3, timer1_t timer1, timer0_t timer0,
+				             spi_t spi, usart1_t usart1, twi_t twi, usb_t usb);
+			#else
+				#error "Please ensure chosen MCU is either 88, 168, 168P, 328P, 32U4, 2560 or 256RFR2."
+			#endif
+			void	adcNoiseReduction(period_t period, adc_t adc, timer2_t timer2) __attribute__((optimize("-O1")));
+			void	powerDown(period_t period, adc_t adc, bod_t bod) __attribute__((optimize("-O1")));
+			void	powerSave(period_t period, adc_t adc, bod_t bod, timer2_t timer2) __attribute__((optimize("-O1")));
+			void	powerStandby(period_t period, adc_t adc, bod_t bod) __attribute__((optimize("-O1")));
+			void	powerExtStandby(period_t period, adc_t adc, bod_t bod, timer2_t timer2) __attribute__((optimize("-O1")));
+      void  longPowerDown(uint32_t sleepTime);
+		#elif defined (__arm__)
+			#if defined(__SAMD21__) || defined(ARDUINO_SAMD_ZERO)
+				void	idle(idle_t idleMode);
+				void	standby();
+			#else
+				#error "Please ensure chosen MCU is a SAMD21"
+			#endif
+
+		#else
+
+			#error "Processor architecture is not supported."
+
+		#endif
+};
+extern LowPowerClass LowPower;
+#endif
+#if defined (__AVR__)
+	#include <avr/sleep.h>
+	#include <avr/wdt.h>
+	#include <avr/power.h>
+	#include <avr/interrupt.h>	
+#elif defined (__arm__)
+#else
+	#error "Processor architecture is not supported."
+#endif
+//include "LowPower.h"
+#if defined (__AVR__)
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined (__AVR_ATmega168P__)
+#ifndef sleep_bod_disable
+#define sleep_bod_disable() 										\
+do { 																\
+  unsigned char tempreg; 													\
+  __asm__ __volatile__("in %[tempreg], %[mcucr]" "\n\t" 			\
+                       "ori %[tempreg], %[bods_bodse]" "\n\t" 		\
+                       "out %[mcucr], %[tempreg]" "\n\t" 			\
+                       "andi %[tempreg], %[not_bodse]" "\n\t" 		\
+                       "out %[mcucr], %[tempreg]" 					\
+                       : [tempreg] "=&d" (tempreg) 					\
+                       : [mcucr] "I" _SFR_IO_ADDR(MCUCR), 			\
+                         [bods_bodse] "i" (_BV(BODS) | _BV(BODSE)), \
+                         [not_bodse] "i" (~_BV(BODSE))); 			\
+} while (0)
+#endif
+#endif
+
+#define	lowPowerBodOn(mode)	\
+do { 						\
+      set_sleep_mode(mode); \
+      cli();				\
+      sleep_enable();		\
+      sei();				\
+      sleep_cpu();			\
+      sleep_disable();		\
+      sei();				\
+} while (0);
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)
+#define	lowPowerBodOff(mode)\
+do { 						\
+      set_sleep_mode(mode); \
+      cli();				\
+      sleep_enable();		\
+			sleep_bod_disable(); \
+      sei();				\
+      sleep_cpu();			\
+      sleep_disable();		\
+      sei();				\
+} while (0);
+#endif
+#if defined __AVR_ATmega32U4__
+	#ifndef PRTIM4
+		#define PRTIM4 4
+	#endif
+	#ifndef power_timer4_disable
+		#define power_timer4_disable()	(PRR1 |= (uint8_t)(1 << PRTIM4))
+	#endif
+	#ifndef power_timer4_enable
+		#define power_timer4_enable()		(PRR1 &= (uint8_t)~(1 << PRTIM4))
+	#endif
+#endif
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168__) || defined (__AVR_ATmega168P__) || defined (__AVR_ATmega88__)
+void	LowPowerClass::idle(period_t period, adc_t adc, timer2_t timer2,
+							timer1_t timer1, timer0_t timer0,
+							spi_t spi, usart0_t usart0,	twi_t twi)
+{
+	unsigned char clockSource = 0;
+
+	if (timer2 == TIMER2_OFF)
+	{
+        clockSource = TCCR2B;	
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+
+		power_timer2_disable();
+	}
+
+	if (adc == ADC_OFF)
+	{
+		ADCSRA &= ~(1 << ADEN);
+		power_adc_disable();
+	}
+	if (timer1 == TIMER1_OFF)	power_timer1_disable();
+	if (timer0 == TIMER0_OFF)	power_timer0_disable();
+	if (spi == SPI_OFF)			power_spi_disable();
+	if (usart0 == USART0_OFF)	power_usart0_disable();
+	if (twi == TWI_OFF)			power_twi_disable();
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+
+	lowPowerBodOn(SLEEP_MODE_IDLE);
+
+	if (adc == ADC_OFF)
+	{
+		power_adc_enable();
+		ADCSRA |= (1 << ADEN);
+	}
+
+	if (timer2 == TIMER2_OFF)
+	{
+    
+        TCCR2B = clockSource;
+        
+		power_timer2_enable();
+	}
+	if (timer1 == TIMER1_OFF)	power_timer1_enable();
+	if (timer0 == TIMER0_OFF)	power_timer0_enable();
+	if (spi == SPI_OFF)			power_spi_enable();
+	if (usart0 == USART0_OFF)	power_usart0_enable();
+	if (twi == TWI_OFF)			power_twi_enable();
+}
+#endif
+
+#if defined (__AVR_ATmega328PB__)
+void	LowPowerClass::idle(period_t period, adc_t adc, 
+							 timer4_t timer4, timer3_t timer3, timer2_t timer2,
+							 timer1_t timer1, timer0_t timer0, 
+							 spi1_t spi1, spi0_t spi0,
+							 usart1_t usart1, usart0_t usart0, 
+							 twi1_t twi1, twi0_t twi0, ptc_t ptc)
+{
+	 
+	unsigned char clockSource = 0;
+
+	if (timer2 == TIMER2_OFF)
+	{
+		if (TCCR2B & CS22) clockSource |= (1 << CS22);
+		if (TCCR2B & CS21) clockSource |= (1 << CS21);
+		if (TCCR2B & CS20) clockSource |= (1 << CS20);	
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+
+		power_timer2_disable();
+	}
+
+	if (adc == ADC_OFF)	
+	{
+		ADCSRA &= ~(1 << ADEN);
+		power_adc_disable();
+	}
+	if (timer4 == TIMER4_OFF)	power_timer4_disable();
+	if (timer3 == TIMER3_OFF)	power_timer3_disable();
+	if (timer1 == TIMER1_OFF)	power_timer1_disable();
+	if (timer0 == TIMER0_OFF)	power_timer0_disable();
+	if (spi1 == SPI1_OFF)			power_spi1_disable();
+	if (spi0 == SPI0_OFF)			power_spi0_disable();
+	if (usart1 == USART1_OFF)	power_usart1_disable();
+	if (usart0 == USART0_OFF)	power_usart0_disable();
+	if (twi1 == TWI1_OFF)			power_twi1_disable();
+	if (twi0 == TWI0_OFF)			power_twi0_disable();
+	if (ptc == PTC_OFF)				power_ptc_disable();
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);	
+	}
+
+	lowPowerBodOn(SLEEP_MODE_IDLE);
+
+	if (adc == ADC_OFF)
+	{
+		power_adc_enable();
+		ADCSRA |= (1 << ADEN);
+	}
+
+	if (timer2 == TIMER2_OFF)
+	{
+		if (clockSource & CS22) TCCR2B |= (1 << CS22);
+		if (clockSource & CS21) TCCR2B |= (1 << CS21);
+		if (clockSource & CS20) TCCR2B |= (1 << CS20);
+
+		power_timer2_enable();
+	}
+	if (timer4 == TIMER4_OFF)	power_timer4_enable();	
+	if (timer3 == TIMER3_OFF)	power_timer3_enable();	
+	if (timer1 == TIMER1_OFF)	power_timer1_enable();	
+	if (timer0 == TIMER0_OFF)	power_timer0_enable();	
+	if (spi1 == SPI1_OFF)			power_spi1_enable();
+	if (spi0 == SPI0_OFF)			power_spi0_enable();
+	if (usart1 == USART1_OFF)	power_usart1_enable();
+	if (usart0 == USART0_OFF)	power_usart0_enable();
+	if (twi1 == TWI1_OFF)			power_twi1_enable();
+	if (twi0 == TWI0_OFF)			power_twi0_enable();
+	if (ptc == PTC_OFF)				power_ptc_enable();
+}
+#endif
+#if defined __AVR_ATmega32U4__
+void	LowPowerClass::idle(period_t period, adc_t adc,
+							timer4_t timer4, timer3_t timer3,
+							timer1_t timer1, timer0_t timer0,
+							spi_t spi, usart1_t usart1,	twi_t twi, usb_t usb)
+{
+	if (adc == ADC_OFF)
+	{
+		ADCSRA &= ~(1 << ADEN);
+		power_adc_disable();
+	}
+	if (timer4 == TIMER4_OFF)	power_timer4_disable();
+	if (timer3 == TIMER3_OFF)	power_timer3_disable();
+	if (timer1 == TIMER1_OFF)	power_timer1_disable();
+	if (timer0 == TIMER0_OFF)	power_timer0_disable();
+	if (spi == SPI_OFF)			power_spi_disable();
+	if (usart1 == USART1_OFF)	power_usart1_disable();
+	if (twi == TWI_OFF)			power_twi_disable();
+	if (usb == USB_OFF)			power_usb_disable();
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+	lowPowerBodOn(SLEEP_MODE_IDLE);
+
+	if (adc == ADC_OFF)
+	{
+		power_adc_enable();
+		ADCSRA |= (1 << ADEN);
+	}
+	if (timer4 == TIMER4_OFF)	power_timer4_enable();
+	if (timer3 == TIMER3_OFF)	power_timer3_enable();
+	if (timer1 == TIMER1_OFF)	power_timer1_enable();
+	if (timer0 == TIMER0_OFF)	power_timer0_enable();
+	if (spi == SPI_OFF)			power_spi_enable();
+	if (usart1 == USART1_OFF)	power_usart1_enable();
+	if (twi == TWI_OFF)			power_twi_enable();
+	if (usb == USB_OFF)			power_usb_enable();
+}
+#endif
+#if defined (__AVR_ATmega644P__) || defined (__AVR_ATmega1284P__)
+void	LowPowerClass::idle(period_t period, adc_t adc, timer2_t timer2,
+							timer1_t timer1, timer0_t timer0, spi_t spi,
+							usart1_t usart1, usart0_t usart0, twi_t twi)
+{
+	// Variável temporária de fonte de relógio
+	unsigned char clockSource = 0;
+
+	if (timer2 == TIMER2_OFF)
+	{
+		// Armazenar configuração atual
+        clockSource = TCCR2B;
+		// Remova a fonte de relógio para desligar o Timer2
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+		power_timer2_disable();
+	}
+
+	if (adc == ADC_OFF)
+	{
+		ADCSRA &= ~(1 << ADEN);
+		power_adc_disable();
+	}
+	if (timer1 == TIMER1_OFF)	power_timer1_disable();
+	if (timer0 == TIMER0_OFF)	power_timer0_disable();
+	if (spi == SPI_OFF)		    power_spi_disable();
+	if (usart1 == USART1_OFF)	power_usart1_disable();
+	if (usart0 == USART0_OFF)	power_usart0_disable();
+	if (twi == TWI_OFF)			power_twi_disable();
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+	lowPowerBodOn(SLEEP_MODE_IDLE);
+	if (adc == ADC_OFF)
+	{
+		power_adc_enable();
+		ADCSRA |= (1 << ADEN);
+	}
+
+	if (timer2 == TIMER2_OFF)
+	{
+        // Restaurar configuração anterior
+        TCCR2B = clockSource;
+
+		power_timer2_enable();
+	}
+	if (timer1 == TIMER1_OFF)	power_timer1_enable();
+	if (timer0 == TIMER0_OFF)	power_timer0_enable();
+	if (spi == SPI_OFF)			power_spi_enable();
+	if (usart1 == USART1_OFF)	power_usart1_enable();
+	if (usart0 == USART0_OFF)	power_usart0_enable();
+	if (twi == TWI_OFF)			power_twi_enable();
+}
+#endif
+#if defined (__AVR_ATmega2560__) || defined (__AVR_ATmega1280__)
+void	LowPowerClass::idle(period_t period, adc_t adc, timer5_t timer5,
+					        timer4_t timer4, timer3_t timer3, timer2_t timer2,
+							timer1_t timer1, timer0_t timer0, spi_t spi,
+							usart3_t usart3, usart2_t usart2, usart1_t usart1,
+			                usart0_t usart0, twi_t twi)
+{
+	// Variável temporária de fonte de relógio
+	unsigned char clockSource = 0;
+
+	if (timer2 == TIMER2_OFF)
+	{
+		// Armazenar configuração atual
+        clockSource = TCCR2B;
+
+		// Remova a fonte de relógio para desligar o Timer2
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+
+		power_timer2_disable();
+	}
+
+	if (adc == ADC_OFF)
+	{
+		ADCSRA &= ~(1 << ADEN);
+		power_adc_disable();
+	}
+
+	if (timer5 == TIMER5_OFF)	power_timer5_disable();
+	if (timer4 == TIMER4_OFF)	power_timer4_disable();
+	if (timer3 == TIMER3_OFF)	power_timer3_disable();
+	if (timer1 == TIMER1_OFF)	power_timer1_disable();
+	if (timer0 == TIMER0_OFF)	power_timer0_disable();
+	if (spi == SPI_OFF)		    power_spi_disable();
+	if (usart3 == USART3_OFF)	power_usart3_disable();
+	if (usart2 == USART2_OFF)	power_usart2_disable();
+	if (usart1 == USART1_OFF)	power_usart1_disable();
+	if (usart0 == USART0_OFF)	power_usart0_disable();
+	if (twi == TWI_OFF)			power_twi_disable();
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+
+	lowPowerBodOn(SLEEP_MODE_IDLE);
+
+	if (adc == ADC_OFF)
+	{
+		power_adc_enable();
+		ADCSRA |= (1 << ADEN);
+	}
+
+	if (timer2 == TIMER2_OFF)
+	{
+        // Restaurar configuração anterior
+        TCCR2B = clockSource;
+
+		power_timer2_enable();
+	}
+	if (timer5 == TIMER5_OFF)	power_timer5_enable();
+	if (timer4 == TIMER4_OFF)	power_timer4_enable();
+	if (timer3 == TIMER3_OFF)	power_timer3_enable();
+	if (timer1 == TIMER1_OFF)	power_timer1_enable();
+	if (timer0 == TIMER0_OFF)	power_timer0_enable();
+	if (spi == SPI_OFF)			power_spi_enable();
+	if (usart3 == USART3_OFF)	power_usart3_enable();
+	if (usart2 == USART2_OFF)	power_usart2_enable();
+	if (usart1 == USART1_OFF)	power_usart1_enable();
+	if (usart0 == USART0_OFF)	power_usart0_enable();
+	if (twi == TWI_OFF)			power_twi_enable();
+}
+#endif
+#if defined (__AVR_ATmega256RFR2__)
+void	LowPowerClass::idle(period_t period, adc_t adc, timer5_t timer5,
+					                timer4_t timer4, timer3_t timer3, timer2_t timer2,
+													timer1_t timer1, timer0_t timer0, spi_t spi,
+													usart1_t usart1,
+			                    usart0_t usart0, twi_t twi)
+{
+	// Variável temporária de fonte de relógio
+	unsigned char clockSource = 0;
+
+	if (timer2 == TIMER2_OFF)
+	{
+		// Armazenar configuração atual
+        clockSource = TCCR2B;
+
+		// Remova a fonte de relógio para desligar o Timer2
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+		power_timer2_disable();
+	}
+
+	if (adc == ADC_OFF)
+	{
+		ADCSRA &= ~(1 << ADEN);
+		power_adc_disable();
+	}
+	if (timer5 == TIMER5_OFF)	power_timer5_disable();
+	if (timer4 == TIMER4_OFF)	power_timer4_disable();
+	if (timer3 == TIMER3_OFF)	power_timer3_disable();
+	if (timer1 == TIMER1_OFF)	power_timer1_disable();
+	if (timer0 == TIMER0_OFF)	power_timer0_disable();
+	if (spi == SPI_OFF)			  power_spi_disable();
+	if (usart1 == USART1_OFF)	power_usart1_disable();
+	if (usart0 == USART0_OFF)	power_usart0_disable();
+	if (twi == TWI_OFF)			  power_twi_disable();
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+
+	lowPowerBodOn(SLEEP_MODE_IDLE);
+
+	if (adc == ADC_OFF)
+	{
+		power_adc_enable();
+		ADCSRA |= (1 << ADEN);
+	}
+
+	if (timer2 == TIMER2_OFF)
+	{
+        // Restaurar configuração anterior
+        TCCR2B = clockSource;
+
+		power_timer2_enable();
+	}
+	if (timer5 == TIMER5_OFF)	power_timer5_enable();
+	if (timer4 == TIMER4_OFF)	power_timer4_enable();
+	if (timer3 == TIMER3_OFF)	power_timer3_enable();
+	if (timer1 == TIMER1_OFF)	power_timer1_enable();
+	if (timer0 == TIMER0_OFF)	power_timer0_enable();
+	if (spi == SPI_OFF)			  power_spi_enable();
+	if (usart1 == USART1_OFF)	power_usart1_enable();
+	if (usart0 == USART0_OFF)	power_usart0_enable();
+	if (twi == TWI_OFF)			  power_twi_enable();
+}
+#endif
+void	LowPowerClass::adcNoiseReduction(period_t period, adc_t adc,
+										 timer2_t timer2)
+{
+	// Variável temporária de fonte de relógio
+	unsigned char clockSource = 0;
+
+	#if !defined(__AVR_ATmega32U4__)
+	if (timer2 == TIMER2_OFF)
+	{
+		// Armazenar configuração atual
+        clockSource = TCCR2B;
+
+		// Remova a fonte de relógio para desligar o Timer2
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+	}
+	#endif
+
+	if (adc == ADC_OFF)	ADCSRA &= ~(1 << ADEN);
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+
+	lowPowerBodOn(SLEEP_MODE_ADC);
+
+	if (adc == ADC_OFF) ADCSRA |= (1 << ADEN);
+
+	#if !defined(__AVR_ATmega32U4__)
+	if (timer2 == TIMER2_OFF)
+	{
+        // Restaurar configuração anterior
+        TCCR2B = clockSource;
+	}
+	#endif
+}
+void	LowPowerClass::powerDown(period_t period, adc_t adc, bod_t bod)
+{
+	if (adc == ADC_OFF)	ADCSRA &= ~(1 << ADEN);
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+	if (bod == BOD_OFF)
+	{
+		#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)
+			lowPowerBodOff(SLEEP_MODE_PWR_DOWN);
+		#else
+			lowPowerBodOn(SLEEP_MODE_PWR_DOWN);
+		#endif
+	}
+	else
+	{
+		lowPowerBodOn(SLEEP_MODE_PWR_DOWN);
+	}
+
+	if (adc == ADC_OFF) ADCSRA |= (1 << ADEN);
+}
+void	LowPowerClass::powerSave(period_t period, adc_t adc, bod_t bod,
+							     timer2_t timer2)
+{
+	// Variável temporária de fonte de relógio
+	unsigned char clockSource = 0;
+
+	#if !defined(__AVR_ATmega32U4__)
+	if (timer2 == TIMER2_OFF)
+	{
+		// Armazenar configuração atual
+        clockSource = TCCR2B;
+		// Remova a fonte de relógio para desligar o Timer2
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+	}
+	#endif
+
+	if (adc == ADC_OFF)	ADCSRA &= ~(1 << ADEN);
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+
+	if (bod == BOD_OFF)
+	{
+		#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)
+			lowPowerBodOff(SLEEP_MODE_PWR_SAVE);
+		#else
+			lowPowerBodOn(SLEEP_MODE_PWR_SAVE);
+		#endif
+	}
+	else
+	{
+		lowPowerBodOn(SLEEP_MODE_PWR_SAVE);
+	}
+
+	if (adc == ADC_OFF) ADCSRA |= (1 << ADEN);
+
+	#if !defined(__AVR_ATmega32U4__)
+	if (timer2 == TIMER2_OFF)
+	{
+      
+        TCCR2B = clockSource;
+	}
+	#endif
+}
+void	LowPowerClass::powerExtStandby(period_t period, adc_t adc, bod_t bod,
+									   timer2_t timer2)
+{
+	unsigned char clockSource = 0;
+
+	#if !defined(__AVR_ATmega32U4__)
+	if (timer2 == TIMER2_OFF)
+	{
+        clockSource = TCCR2B;
+		TCCR2B &= ~(1 << CS22);
+		TCCR2B &= ~(1 << CS21);
+		TCCR2B &= ~(1 << CS20);
+	}
+	#endif
+
+	if (adc == ADC_OFF)	ADCSRA &= ~(1 << ADEN);
+
+	if (period != SLEEP_FOREVER)
+	{
+		wdt_enable(period);
+		WDTCSR |= (1 << WDIE);
+	}
+
+
+	#if defined (__AVR_ATmega88__) || defined (__AVR_ATmega168__) // SLEEP_MODE_EXT_STANDBY not implemented on Atmega88 / Atmega168
+	#else
+		if (bod == BOD_OFF)
+		{
+			#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega1284P__)
+				lowPowerBodOff(SLEEP_MODE_EXT_STANDBY);
+			#else
+				lowPowerBodOn(SLEEP_MODE_EXT_STANDBY);
+			#endif
+		}
+		else
+		{
+			lowPowerBodOn(SLEEP_MODE_EXT_STANDBY);
+		}
+	#endif
+
+	if (adc == ADC_OFF) ADCSRA |= (1 << ADEN);
+
+	#if !defined(__AVR_ATmega32U4__)
+	if (timer2 == TIMER2_OFF)
+	{
+        
+        TCCR2B = clockSource;
+	}
+	#endif
+}
+void LowPowerClass::longPowerDown(uint32_t sleepTime) {
+  do {
+    if (sleepTime > 8000)
+    {
+      powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+      sleepTime-=8000;
+    }
+    else if (sleepTime > 4000)
+    {
+      powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
+      sleepTime-=4000;
+    }
+    else if (sleepTime > 2000)
+    {
+      powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
+      sleepTime-=2000;
+    }
+    else if (sleepTime > 1000)
+    {
+      powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
+      sleepTime-=1000;
+    }
+    else if (sleepTime > 512)
+    {
+      powerDown(SLEEP_500MS, ADC_OFF, BOD_OFF);
+      sleepTime-=512;
+    }
+    else if (sleepTime > 256)
+    {
+      powerDown(SLEEP_250MS, ADC_OFF, BOD_OFF);
+      sleepTime-=256;
+    }
+    else if (sleepTime > 128)
+    {
+      powerDown(SLEEP_120MS, ADC_OFF, BOD_OFF);
+      sleepTime-=128;
+    }
+    else if (sleepTime > 64)
+    {
+      powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
+      sleepTime-=64;
+    }
+    else if (sleepTime > 32)
+    {
+      powerDown(SLEEP_30MS, ADC_OFF, BOD_OFF);
+      sleepTime-=32;
+    }
+    else if (sleepTime > 16)
+    {
+      powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+      sleepTime-=16;
+    }
+    else
+    {
+      sleepTime=0;
+    }
+  } while(sleepTime);
+}
+
+ISR (WDT_vect)
+{
+	// WDIE e WDIF são limpos no hardware ao entrar neste ISR
+	wdt_disable();
+}
+
+#elif defined(__arm__)
+#if defined(__SAMD21__) || defined(ARDUINO_SAMD_ZERO)
+void	LowPowerClass::idle(idle_t idleMode)
+{
+	SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+	PM->SLEEP.reg = idleMode;
+	__DSB();
+	__WFI();
+}
+
+void	LowPowerClass::standby()
+{
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	__DSB();
+	__WFI();
+}
+#else
+	#error "Please ensure chosen MCU is a SAMD21"
+#endif
+#else
+	#error "Processor architecture is not supported."
+#endif
+LowPowerClass LowPower;
+// Fin LowPower.cpp
+// ==== início da aplicação 
+// suporte para o LCD 16x2 (I2C)
+#include <LiquidCrystal_I2C.h>
+// Definição da porta analógica para o sensor de temperatura e umidade
+#define analogIn A1
+// se define o LCD 16x2 (I2C)
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+// LEDs para indicar a qualidade do ar detectada pelo sensor de GÁS
+#define LED_VERDE 8
+#define LED_ROJO 9
+// Entrada para o sensor de GÁS de umidade
+#define MQ135PIN A0
+void setup() {
+  	// inicializa o monitor serial
+	Serial.begin(9600);
+  	// Inicialização do LD
+	lcd.init();
+	lcd.backlight();
+    // Definindo os LEDs como saída
+	pinMode(LED_VERDE, OUTPUT);
+	pinMode(LED_ROJO, OUTPUT);
+  	// Estabelecendo a porta de entrada do sensor de Temperatura
+  	pinMode(analogIn, INPUT);    
+}
+void wakeUp()
+{
+}
+void loop() {
+     // os dados são mostrados no LCD
+ 	 lcd.clear();
+  	 lcd.setCursor(0,0);
+     lcd.print("EST. METEO. INT.");
+     lcd.setCursor(0,1);
+     lcd.print("Coletando amostras");
+     // Pausa para que os sensores atualizem seus valores
+     delay(2000);
+  	 // Pausa para mostrar a mensagem no LCD
+  	 delay(1000);
+  	 // Obtém-se o valor bruto da temperatura
+ 	 int RawValue = analogRead(analogIn); 
+     // o valor lido da temperatura é convertido em voltagem
+ 	 float Voltage = (RawValue / 1023.0) * 5000; // 5000 to get millivots.
+     // converte a tensão em graus Celsius
+  	 float tempC = (Voltage-500) * 0.1; // 500 is the offset
+     // obtém-se o valor gerado pelo sensor de GÁS
+ 	 int calidadAire = analogRead(MQ135PIN);
+  	 // obtém-se os dados gerados pelo sensor de Temperatura
+     int humedad = analogRead(A1);
+     // os dados são enviados para o monitor serial por controle 
+ 	 Serial.print("Vakor Bruto = " );                  
+ 	 Serial.print(RawValue);      
+ 	 Serial.print("\t milli volts = ");
+ 	 Serial.print(Voltage,0);
+	 Serial.print("\t Temperatura em C = ");
+	 Serial.print(tempC,1); 
+	 Serial.print("Umidae: "); // Imprimindo a Percentagem de Umidade
+	 Serial.print(map(humedad, 0, 1023, 10, 70));
+ 	 Serial.println("%");
+     Serial.print("QualidadeDoAr ");
+  	 Serial.println(calidadAire);
+     // os valores convertidos são exibidos no LCD
+     lcd.clear();
+	 lcd.setCursor(0,0);
+	 lcd.print("Temp: ");
+   	 lcd.print(tempC);
+	 lcd.print(" C");
+	 lcd.setCursor(0,1);
+	 lcd.print("Hum:  ");
+	 lcd.print(humedad);
+	 lcd.print(" %");
+  	 delay(2000);
+  	 lcd.clear();
+	 lcd.print("Qualidade do ar: ");
+  	 lcd.setCursor(0,1);
+	 lcd.print(calidadAire);  
+	if (calidadAire < 300) {
+		digitalWrite(LED_VERDE, HIGH);
+		digitalWrite(LED_ROJO, LOW);
+	}   else {
+		digitalWrite(LED_VERDE, LOW);
+		digitalWrite(LED_ROJO, HIGH);
+	}
+  	 delay(2000);
+}
